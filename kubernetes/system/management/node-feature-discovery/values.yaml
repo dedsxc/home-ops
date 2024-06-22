@@ -1,0 +1,21 @@
+node-feature-discovery:
+  worker:
+    annotations:
+      configmap.reloader.stakater.com/reload: node-feature-discovery-worker-conf
+    config:
+      core:
+        featureSources: [custom, usb, pci]
+      sources:
+        custom:
+        # The following feature demonstrates the capabilities of the matchFeatures
+        - name: "google coral device"
+          labels:
+            google.feature.node.kubernetes.io/coral.present: "true"
+          matchFeatures:
+            - feature: usb.device
+              matchExpressions:
+                # in node, run 'lsusb' to locate google coral device
+                # output cmd:
+                # Bus 002 Device 003: ID 18d1:9302 Google Inc.
+                # Bus 002 Device 002: ID 1a6e:089a Global Unichip Corp. 
+                vendor: { op: In, value: ["18d1","1a6e"] }

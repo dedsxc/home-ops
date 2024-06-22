@@ -1,0 +1,6 @@
+nfs-subdir-external-provisioner:
+  nfs:
+    server: 192.168.10.252
+    path: /volume1/nfs/kubernetes
+  storageClass:
+    reclaimPolicy: Retain

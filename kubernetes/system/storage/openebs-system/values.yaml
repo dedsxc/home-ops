@@ -1,0 +1,5 @@
+openebs:
+  localprovisioner:
+    basePath: "/data"
+    deviceClass:
+      reclaimPolicy: Retain

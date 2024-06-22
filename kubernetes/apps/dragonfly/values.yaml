@@ -1,0 +1,11 @@
+dragonfly:
+  replicaCount: 1
+  service: 
+    type: LoadBalancer
+  extraArgs: 
+    # See issue: https://github.com/dragonflydb/dragonfly/discussions/1497
+    - "--proactor_threads=2"
+  serviceMonitor:
+    enabled: true
+  storage:
+    enabled: true

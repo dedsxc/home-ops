@@ -1,0 +1,50 @@
+cluster:
+  cluster:
+    imageName: ghcr.io/cloudnative-pg/postgresql:16.2-16
+    storage:
+      storageClass: longhorn-single
+    superuserSecret: cloudnative-pg
+    monitoring:
+      enabled: true
+    postgresql:
+      max_connections: "300"
+    affinity:
+      enablePodAntiAffinity: true
+      topologyKey: kubernetes.io/hostname
+      podAntiAffinityType: required
+
+pg-cron:
+  controller:
+    enabled: true
+    type: cronjob
+    cronjob:
+      # run every day at 1 AM
+      schedule: 0 1 * * *
+  image:
+    repository: postgres
+    tag: 16.3-bulleye@sha256:a1b25666f2d473293880d178cb682e7e826fe384a142e4345b17914aa1d36daa
+  command:
+    - /bin/bash
+    - -c
+    - |
+      echo -e "\e[32m[+]\e[0m Start backup" && \
+      $(which pg_dumpall) -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -f /tmp/cloudnative-pg-backup-$(date +%F).sql && \
+      echo -e "\e[31m[-]\e[0m Remove old backup"
+      find /tmp -type f -mtime +5 -print -exec rm {} \;
+      echo -e "\e[32m[+]\e[0m Done."
+  envFrom:
+    - secretRef:
+        name: cloudnative-pg
+  service:
+    main:
+      enabled: false
+  persistence:
+    database:
+      enabled: true
+      mountPath: /tmp
+      storageClass: nfs-client
+      accessMode: "ReadWriteOnce"
+      size: 10Gi
+      retain: true
+      volume:
+        enabled: false

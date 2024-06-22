@@ -1,0 +1,16 @@
+external-dns:
+  provider: pihole
+  args:
+    - --metrics-address=:7979
+    - --log-level=info
+    - --log-format=text
+    - --policy=upsert-only
+    - --provider=pihole
+    - --registry=noop
+    - --interval=1m
+    - --source=service
+    - --source=ingress
+    - --pihole-server=http://192.168.10.252:8086
+  policy: upsert-only
+  pihole:
+    secretName: external-dns

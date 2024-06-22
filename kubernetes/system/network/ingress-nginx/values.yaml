@@ -1,0 +1,9 @@
+ingress-nginx:
+  controller:
+    # port: 10254
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+    ingressClassResource:
+      default: true

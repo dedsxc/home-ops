@@ -1,0 +1,11 @@
+apiVersion: v2
+name: nfs-subdir-external-provisioner
+description: A Helm chart for Kubernetes
+type: application
+version: 0.1.0
+appVersion: "0.0.0"
+
+dependencies:
+  - name: nfs-subdir-external-provisioner
+    repository: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
+    version: 4.0.18
